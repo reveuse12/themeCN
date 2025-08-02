@@ -1,3 +1,5 @@
+
+
 'use client';
 
 import { useState } from 'react';
@@ -21,11 +23,12 @@ const pages = {
   contact: 'Contact Page'
 };
 
-interface PreviewPageProps {
+type PageProps = {
   params: { slug: string[] };
-}
+  searchParams?: { [key: string]: string | string[] | undefined };
+};
 
-export default function PreviewPage({ params }: PreviewPageProps) {
+export default function PreviewPage({ params }: any) {
   const { slug } = params;
   const { currentTheme } = useTheme();
 

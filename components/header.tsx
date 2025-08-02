@@ -39,10 +39,8 @@ export function Header() {
           <NavbarLogo />
           <NavItems items={navItems} />
           <div className="flex items-center gap-2">
-            <NavbarButton variant="ghost">Login</NavbarButton>
-            <NavbarButton asChild>
-              <Link href="/themes">Preview</Link>
-            </NavbarButton>
+            <NavbarButton variant="secondary">Login</NavbarButton>
+            <NavbarButton href="/themes">Preview</NavbarButton>
           </div>
         </NavBody>
 
@@ -80,11 +78,11 @@ export function Header() {
               </NavbarButton>
               <NavbarButton
                 onClick={() => setIsMobileMenuOpen(false)}
-                variant="default"
+                variant="primary"
                 className="w-full"
-                asChild
+                href="/themes"
               >
-                <Link href="/themes">Preview</Link>
+                Preview
               </NavbarButton>
             </div>
           </MobileNavMenu>
