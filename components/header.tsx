@@ -39,7 +39,7 @@ export function Header() {
           <NavbarLogo />
           <NavItems items={navItems} />
           <div className="flex items-center gap-2">
-            <NavbarButton variant="secondary" className="text-white">Login</NavbarButton>
+            <NavbarButton variant="secondary" className="text-primary/50">Login</NavbarButton>
             <NavbarButton href="/themes">Preview</NavbarButton>
           </div>
         </NavBody>
