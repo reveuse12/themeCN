@@ -25,7 +25,7 @@ export function Header() {
     },
     {
       name: "Contact",
-      link: "#contact",
+      link: "/contact",
     },
   ];
 
@@ -33,13 +33,13 @@ export function Header() {
 
   return (
     <div className="relative w-full mb-8">
-      <Navbar className="fixed top-0 z-50 border-b border-border/40 bg-background/95 backdrop-blur-sm">
+      <Navbar className="fixed top-0 z-50">
         {/* Desktop Navigation */}
         <NavBody>
           <NavbarLogo />
           <NavItems items={navItems} />
           <div className="flex items-center gap-2">
-            <NavbarButton variant="secondary">Login</NavbarButton>
+            <NavbarButton variant="secondary" className="text-white">Login</NavbarButton>
             <NavbarButton href="/themes">Preview</NavbarButton>
           </div>
         </NavBody>
@@ -72,7 +72,7 @@ export function Header() {
               <NavbarButton
                 onClick={() => setIsMobileMenuOpen(false)}
                 variant="secondary"
-                className="w-full"
+                className="w-full text-white"
               >
                 Login
               </NavbarButton>
