@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion';
-import { ArrowRight, Palette, Code, Zap, Star, Download, Copy, Bot, Wand2, Paintbrush } from 'lucide-react';
+import { ArrowRight, Palette, Code, Zap, Star, Download, Copy, Bot, Wand2, Paintbrush, Rss } from 'lucide-react';
 import Link from 'next/link';
 import { Badge } from '@/components/ui/badge';
 
@@ -81,6 +81,27 @@ const faqs = [
     {
         question: "Can I customize the generated themes?",
         answer: "Yes. After the AI generates a theme, you can fine-tune every color. You have full control to adjust the palette until it perfectly matches your vision before exporting the final CSS."
+    }
+]
+
+const blogPosts = [
+    {
+        title: "The Future of Web Development",
+        description: "Discover the latest trends and technologies shaping the future of web development.",
+        date: "1 day ago",
+        link: "/preview/blog"
+    },
+    {
+        title: "How to Build a Design System",
+        description: "A step-by-step guide to creating a consistent and scalable design system.",
+        date: "3 days ago",
+        link: "/preview/blog"
+    },
+    {
+        title: "Optimizing Performance",
+        description: "Learn how to improve your application's performance and user experience.",
+        date: "1 week ago",
+        link: "/preview/blog"
     }
 ]
 
@@ -216,6 +237,13 @@ export default function HomePage() {
               </Card>
             ))}
           </div>
+            <div className="text-center mt-12">
+                <Button asChild variant="outline">
+                    <Link href="/preview/features">
+                        See All Features <ArrowRight className="w-4 h-4 ml-2" />
+                    </Link>
+                </Button>
+            </div>
         </div>
       </section>
 
@@ -249,8 +277,38 @@ export default function HomePage() {
         </div>
       </section>
 
+      {/* Blog Section */}
+        <section id="blog" className="py-16 md:py-24 bg-secondary/50">
+            <div className="container mx-auto px-4">
+                <div className="text-center mb-12">
+                    <h2 className="text-3xl md:text-4xl font-bold tracking-tight">From the Blog</h2>
+                    <p className="text-muted-foreground mt-2 max-w-2xl mx-auto">
+                        Latest news, updates, and best practices from our team.
+                    </p>
+                </div>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                    {blogPosts.map((post, index) => (
+                        <Card key={index}>
+                            <CardHeader>
+                                <CardTitle>{post.title}</CardTitle>
+                                <CardDescription>{post.date}</CardDescription>
+                            </CardHeader>
+                            <CardContent>
+                                <p className="text-muted-foreground mb-4">{post.description}</p>
+                                <Button asChild variant="link" className="p-0">
+                                    <Link href={post.link}>
+                                        Read More <ArrowRight className="w-4 h-4 ml-2" />
+                                    </Link>
+                                </Button>
+                            </CardContent>
+                        </Card>
+                    ))}
+                </div>
+            </div>
+        </section>
+
       {/* FAQ Section */}
-      <section id="faq" className="py-16 md:py-24 bg-secondary/50">
+      <section id="faq" className="py-16 md:py-24">
         <div className="container mx-auto px-4 max-w-3xl">
           <div className="text-center mb-12">
             <h2 className="text-3xl md:text-4xl font-bold tracking-tight">Frequently Asked Questions</h2>
@@ -290,18 +348,49 @@ export default function HomePage() {
 
       {/* Footer */}
       <footer className="border-t">
-        <div className="container mx-auto px-4 flex flex-col md:flex-row items-center justify-between py-8">
-          <div className="flex items-center space-x-2 mb-4 md:mb-0">
-            <Palette className="w-6 h-6" />
-            <span className="text-xl font-bold">themeCN</span>
-          </div>
-          <p className="text-muted-foreground text-sm">
-            &copy; {new Date().getFullYear()} themeCN. All rights reserved.
-          </p>
-          <div className="flex items-center space-x-4 mt-4 md:mt-0">
-            <Link href="#" className="text-sm text-muted-foreground hover:text-foreground">Privacy Policy</Link>
-            <Link href="#" className="text-sm text-muted-foreground hover:text-foreground">Terms of Service</Link>
-          </div>
+        <div className="container mx-auto px-4 py-12">
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-8">
+                <div>
+                    <h3 className="font-semibold mb-4">Product</h3>
+                    <ul className="space-y-2">
+                        <li><Link href="/themes" className="text-sm text-muted-foreground hover:text-foreground">Themes</Link></li>
+                        <li><Link href="/preview/features" className="text-sm text-muted-foreground hover:text-foreground">Features</Link></li>
+                        <li><Link href="/preview/pricing" className="text-sm text-muted-foreground hover:text-foreground">Pricing</Link></li>
+                        <li><Link href="#faq" className="text-sm text-muted-foreground hover:text-foreground">FAQ</Link></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 className="font-semibold mb-4">Company</h3>
+                    <ul className="space-y-2">
+                        <li><Link href="/preview/team" className="text-sm text-muted-foreground hover:text-foreground">Team</Link></li>
+                        <li><Link href="/preview/blog" className="text-sm text-muted-foreground hover:text-foreground">Blog</Link></li>
+                        <li><Link href="/contact" className="text-sm text-muted-foreground hover:text-foreground">Contact</Link></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 className="font-semibold mb-4">Legal</h3>
+                    <ul className="space-y-2">
+                        <li><Link href="#" className="text-sm text-muted-foreground hover:text-foreground">Privacy Policy</Link></li>
+                        <li><Link href="#" className="text-sm text-muted-foreground hover:text-foreground">Terms of Service</Link></li>
+                    </ul>
+                </div>
+                <div>
+                    <h3 className="font-semibold mb-4">Connect</h3>
+                    <ul className="space-y-2">
+                        <li><Link href="#" className="text-sm text-muted-foreground hover:text-foreground">Twitter</Link></li>
+                        <li><Link href="#" className="text-sm text-muted-foreground hover:text-foreground">GitHub</Link></li>
+                    </ul>
+                </div>
+            </div>
+            <div className="border-t mt-8 pt-8 flex flex-col md:flex-row items-center justify-between">
+                <div className="flex items-center space-x-2 mb-4 md:mb-0">
+                    <Palette className="w-6 h-6" />
+                    <span className="text-xl font-bold">themeCN</span>
+                </div>
+                <p className="text-muted-foreground text-sm">
+                    &copy; {new Date().getFullYear()} themeCN. All rights reserved.
+                </p>
+            </div>
         </div>
       </footer>
     </div>

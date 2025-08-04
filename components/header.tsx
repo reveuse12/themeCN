@@ -40,7 +40,7 @@ export function Header() {
           <NavItems items={navItems} />
           <div className="flex items-center gap-2">
             <NavbarButton variant="secondary" className="text-primary/50">Login</NavbarButton>
-            <NavbarButton href="/themes">Preview</NavbarButton>
+            <NavbarButton href="/themes">Themes</NavbarButton>
           </div>
         </NavBody>
 
@@ -82,7 +82,7 @@ export function Header() {
                 className="w-full"
                 href="/themes"
               >
-                Preview
+                Themes
               </NavbarButton>
             </div>
           </MobileNavMenu>

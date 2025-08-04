@@ -10,7 +10,7 @@ import { Badge } from '@/components/ui/badge';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import { Progress } from '@/components/ui/progress';
-import { ArrowLeft, Palette, BarChart3, Users, MessageSquare, Settings, Home, Send, Menu, Bell, Search, ChevronDown } from 'lucide-react';
+import { ArrowLeft, Palette, BarChart3, Users, MessageSquare, Settings, Home, Send, Menu, Bell, Search, ChevronDown, Feather, CreditCard, Zap, Code, CheckCircle, Rss, UserPlus } from 'lucide-react';
 import Link from 'next/link';
 import { useTheme } from '@/components/theme-provider';
 
@@ -20,7 +20,11 @@ const pages = {
   chat: 'AI Chat Interface',
   settings: 'User Settings',
   landing: 'Landing Page',
-  contact: 'Contact Page'
+  contact: 'Contact Page',
+  features: 'Features Section',
+  pricing: 'Pricing Page',
+  blog: 'Blog Page',
+  team: 'Team Page'
 };
 
 type PageProps = {
@@ -479,6 +483,205 @@ export default function PreviewPage({ params }: any) {
     </div>
   );
 
+  const renderFeatures = () => (
+    <div className="space-y-12">
+      <div className="text-center">
+        <h1 className="text-3xl font-bold mb-4">Features</h1>
+        <p className="text-muted-foreground max-w-2xl mx-auto">
+          Discover the powerful features that make our platform the best choice for your projects.
+        </p>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <Card className="text-center">
+          <CardHeader>
+            <Zap className="w-10 h-10 text-primary mx-auto mb-4" />
+            <CardTitle>Lightning Fast</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-muted-foreground">
+              Experience blazing fast performance and instant feedback.
+            </p>
+          </CardContent>
+        </Card>
+        <Card className="text-center">
+          <CardHeader>
+            <Code className="w-10 h-10 text-primary mx-auto mb-4" />
+            <CardTitle>Developer Friendly</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-muted-foreground">
+              Easy to integrate with your existing workflow and tools.
+            </p>
+          </CardContent>
+        </Card>
+        <Card className="text-center">
+          <CardHeader>
+            <Feather className="w-10 h-10 text-primary mx-auto mb-4" />
+            <CardTitle>Lightweight</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <p className="text-muted-foreground">
+              No bloat, just the features you need to get the job done.
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  );
+
+  const renderPricing = () => (
+    <div className="space-y-12">
+      <div className="text-center">
+        <h1 className="text-3xl font-bold mb-4">Pricing</h1>
+        <p className="text-muted-foreground max-w-2xl mx-auto">
+          Choose the plan that's right for you and your team.
+        </p>
+      </div>
+
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 max-w-5xl mx-auto">
+        <Card>
+          <CardHeader className="text-center">
+            <CardTitle className="text-2xl">Hobby</CardTitle>
+            <p className="text-4xl font-bold">$10<span className="text-lg font-normal text-muted-foreground">/mo</span></p>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <ul className="space-y-2">
+              <li className="flex items-center"><CheckCircle className="w-4 h-4 mr-2 text-green-500" /> 1 Project</li>
+              <li className="flex items-center"><CheckCircle className="w-4 h-4 mr-2 text-green-500" /> 10GB Storage</li>
+              <li className="flex items-center"><CheckCircle className="w-4 h-4 mr-2 text-green-500" /> Basic Analytics</li>
+            </ul>
+            <Button className="w-full">Choose Plan</Button>
+          </CardContent>
+        </Card>
+
+        <Card className="border-primary">
+          <CardHeader className="text-center">
+            <Badge className="mb-2">Most Popular</Badge>
+            <CardTitle className="text-2xl">Pro</CardTitle>
+            <p className="text-4xl font-bold">$49<span className="text-lg font-normal text-muted-foreground">/mo</span></p>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <ul className="space-y-2">
+              <li className="flex items-center"><CheckCircle className="w-4 h-4 mr-2 text-green-500" /> 10 Projects</li>
+              <li className="flex items-center"><CheckCircle className="w-4 h-4 mr-2 text-green-500" /> 100GB Storage</li>
+              <li className="flex items-center"><CheckCircle className="w-4 h-4 mr-2 text-green-500" /> Advanced Analytics</li>
+              <li className="flex items-center"><CheckCircle className="w-4 h-4 mr-2 text-green-500" /> Team Collaboration</li>
+            </ul>
+            <Button className="w-full">Choose Plan</Button>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader className="text-center">
+            <CardTitle className="text-2xl">Enterprise</CardTitle>
+            <p className="text-4xl font-bold">Contact Us</p>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <ul className="space-y-2">
+                <li className="flex items-center"><CheckCircle className="w-4 h-4 mr-2 text-green-500" /> Unlimited Projects</li>
+                <li className="flex items-center"><CheckCircle className="w-4 h-4 mr-2 text-green-500" /> Unlimited Storage</li>
+                <li className="flex items-center"><CheckCircle className="w-4 h-4 mr-2 text-green-500" /> Dedicated Support</li>
+                <li className="flex items-center"><CheckCircle className="w-4 h-4 mr-2 text-green-500" /> Custom Integrations</li>
+            </ul>
+            <Button variant="outline" className="w-full">Contact Sales</Button>
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  );
+
+  const renderBlog = () => (
+    <div className="space-y-12">
+      <div className="text-center">
+        <h1 className="text-3xl font-bold mb-4">From the Blog</h1>
+        <p className="text-muted-foreground max-w-2xl mx-auto">
+          Latest news, updates, and best practices from our team.
+        </p>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <Card>
+          <CardHeader>
+            <img src="/placeholder.svg" alt="Blog post image" className="rounded-t-lg" />
+            <CardTitle className="pt-4">The Future of Web Development</CardTitle>
+            <CardDescription>1 day ago</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <p className="text-muted-foreground">
+              Discover the latest trends and technologies shaping the future of web development.
+            </p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader>
+            <img src="/placeholder.svg" alt="Blog post image" className="rounded-t-lg" />
+            <CardTitle className="pt-4">How to Build a Design System</CardTitle>
+            <CardDescription>3 days ago</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <p className="text-muted-foreground">
+              A step-by-step guide to creating a consistent and scalable design system.
+            </p>
+          </CardContent>
+        </Card>
+        <Card>
+          <CardHeader>
+            <img src="/placeholder.svg" alt="Blog post image" className="rounded-t-lg" />
+            <CardTitle className="pt-4">Optimizing Performance</CardTitle>
+            <CardDescription>1 week ago</CardDescription>
+          </CardHeader>
+          <CardContent>
+            <p className="text-muted-foreground">
+              Learn how to improve your application's performance and user experience.
+            </p>
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  );
+
+  const renderTeam = () => (
+    <div className="space-y-12">
+      <div className="text-center">
+        <h1 className="text-3xl font-bold mb-4">Meet the Team</h1>
+        <p className="text-muted-foreground max-w-2xl mx-auto">
+          The people behind the platform, dedicated to helping you succeed.
+        </p>
+      </div>
+
+      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+        <Card className="text-center">
+          <CardContent className="pt-6">
+            <Avatar className="w-24 h-24 mx-auto mb-4">
+              <AvatarFallback>JD</AvatarFallback>
+            </Avatar>
+            <h3 className="font-semibold text-lg">John Doe</h3>
+            <p className="text-muted-foreground">CEO & Co-Founder</p>
+          </CardContent>
+        </Card>
+        <Card className="text-center">
+          <CardContent className="pt-6">
+            <Avatar className="w-24 h-24 mx-auto mb-4">
+              <AvatarFallback>JS</AvatarFallback>
+            </Avatar>
+            <h3 className="font-semibold text-lg">Jane Smith</h3>
+            <p className="text-muted-foreground">CTO & Co-Founder</p>
+          </CardContent>
+        </Card>
+        <Card className="text-center">
+          <CardContent className="pt-6">
+            <Avatar className="w-24 h-24 mx-auto mb-4">
+              <AvatarFallback>MB</AvatarFallback>
+            </Avatar>
+            <h3 className="font-semibold text-lg">Michael Brown</h3>
+            <p className="text-muted-foreground">Lead Designer</p>
+          </CardContent>
+        </Card>
+      </div>
+    </div>
+  );
+
   const renderPage = () => {
     switch (currentPage) {
       case 'dashboard':
@@ -491,6 +694,14 @@ export default function PreviewPage({ params }: any) {
         return renderLanding();
       case 'contact':
         return renderContact();
+      case 'features':
+        return renderFeatures();
+      case 'pricing':
+        return renderPricing();
+      case 'blog':
+        return renderBlog();
+      case 'team':
+        return renderTeam();
       default:
         return renderDashboard();
     }
@@ -530,6 +741,10 @@ export default function PreviewPage({ params }: any) {
                       )}
                       {key === 'landing' && <Home className="w-4 h-4 mr-2" />}
                       {key === 'contact' && <Users className="w-4 h-4 mr-2" />}
+                      {key === 'features' && <Feather className="w-4 h-4 mr-2" />}
+                      {key === 'pricing' && <CreditCard className="w-4 h-4 mr-2" />}
+                      {key === 'blog' && <Rss className="w-4 h-4 mr-2" />}
+                      {key === 'team' && <UserPlus className="w-4 h-4 mr-2" />}
                       {title}
                     </Link>
                   </Button>

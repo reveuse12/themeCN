@@ -43,6 +43,18 @@ export const metadata: Metadata = {
   title: "ThemeCN - Beautiful Shadcn/UI Themes Generator",
   description:
     "Generate and customize beautiful themes for your Next.js projects using Shadcn/UI components. Export CSS with one click.",
+  keywords: [
+    "Shadcn/UI",
+    "Next.js",
+    "Theme generator",
+    "CSS variables",
+    "Tailwind CSS",
+    "React components",
+    "UI themes",
+    "Frontend development",
+    "Web design",
+    "AI theme generator",
+  ],
 };
 
 export default function RootLayout({

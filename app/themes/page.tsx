@@ -127,40 +127,84 @@ export default function ThemesPage() {
 
         <section className="mb-16">
           <h2 className="text-3xl font-bold mb-6">Curated Themes</h2>
-          <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
             {themes.map((theme) => (
               <Card 
                 key={theme.id} 
-                className={`cursor-pointer transition-all hover:shadow-lg ${
+                className={`transition-all hover:shadow-lg ${
                   currentTheme.id === theme.id ? 'ring-2 ring-primary' : ''
                 }`}
-                onClick={() => handleThemeSelect(theme)}
               >
-                <CardHeader className="pb-3">
+                <CardHeader>
                   <div className="flex items-center justify-between">
-                    <CardTitle className="text-lg">{theme.name}</CardTitle>
+                    <CardTitle>{theme.name}</CardTitle>
                     {currentTheme.id === theme.id && (
                       <Badge variant="secondary">Active</Badge>
                     )}
                   </div>
-                  <CardDescription className="text-sm h-10">
-                    {theme.description}
-                  </CardDescription>
+                  <CardDescription>{theme.description}</CardDescription>
                 </CardHeader>
-                <CardContent>
-                  <div className="flex space-x-2">
-                    <div 
-                      className="w-full h-8 rounded-md border"
-                      style={{ backgroundColor: `hsl(${theme.colors.primary})` }}
-                    />
-                    <div 
-                      className="w-full h-8 rounded-md border"
-                      style={{ backgroundColor: `hsl(${theme.colors.secondary})` }}
-                    />
-                    <div 
-                      className="w-full h-8 rounded-md border"
-                      style={{ backgroundColor: `hsl(${theme.colors.accent})` }}
-                    />
+                <CardContent className="space-y-4">
+                  <div 
+                    className="h-48 rounded-lg border-2 border-border flex items-center justify-center p-4"
+                    style={{
+                      backgroundColor: `hsl(${theme.colors.background})`,
+                      color: `hsl(${theme.colors.foreground})`
+                    }}
+                  >
+                    <div className="text-center space-y-2">
+                      <h3 
+                        className="text-2xl font-bold"
+                        style={{ color: `hsl(${theme.colors.primary})` }}
+                      >
+                        Aa
+                      </h3>
+                      <p style={{ color: `hsl(${theme.colors.foreground})` }}>
+                        The quick brown fox jumps over the lazy dog.
+                      </p>
+                      <div className="flex justify-center gap-2 pt-2">
+                        <div 
+                          className="w-8 h-8 rounded-full"
+                          style={{ backgroundColor: `hsl(${theme.colors.primary})` }}
+                        />
+                        <div 
+                          className="w-8 h-8 rounded-full"
+                          style={{ backgroundColor: `hsl(${theme.colors.secondary})` }}
+                        />
+                        <div 
+                          className="w-8 h-8 rounded-full"
+                          style={{ backgroundColor: `hsl(${theme.colors.accent})` }}
+                        />
+                      </div>
+                    </div>
+                  </div>
+                  <div className="flex gap-2">
+                    <Button 
+                      onClick={() => handleThemeSelect(theme)}
+                      variant={currentTheme.id === theme.id ? 'default' : 'outline'}
+                      className="w-full"
+                    >
+                      {currentTheme.id === theme.id ? 'Selected' : 'Select'}
+                    </Button>
+                    <Button variant="outline" asChild className="w-full">
+                      <Link href={`/preview/${theme.id}`}>
+                        <Eye className="w-4 h-4 mr-2" />
+                        Preview
+                      </Link>
+                    </Button>
+                    <Dialog>
+                      <DialogTrigger asChild>
+                        <Button variant="outline">
+                          <Download className="w-4 h-4" />
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent>
+                        <DialogHeader>
+                          <DialogTitle>Export {theme.name}</DialogTitle>
+                        </DialogHeader>
+                        {/* Export content will be here */}
+                      </DialogContent>
+                    </Dialog>
                   </div>
                 </CardContent>
               </Card>
@@ -291,228 +335,7 @@ export default function ThemesPage() {
           </Card>
         </section>
 
-        <section>
-          <div className="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:sticky lg:top-8">
-            <div className="lg:col-span-1">
-              <h2 className="text-3xl font-bold mb-6">Customize & Preview</h2>
-              <Card>
-                <CardContent className="p-6 space-y-6">
-                  {/* Color Customization */}
-                  <div>
-                    <h4 className="font-medium mb-4">Colors</h4>
-                    <div className="grid grid-cols-2 gap-4">
-                      {Object.entries(currentTheme.colors).map(([name, value]) => (
-                        <div key={name} className="space-y-2">
-                          <label className="text-sm capitalize">{name.replace(/([A-Z])/g, ' $1')}</label>
-                          <div className="flex items-center space-x-2">
-                            <Popover>
-                              <PopoverTrigger asChild>
-                                <Button
-                                  variant="outline"
-                                  className="w-10 h-10 p-0 border"
-                                  style={{ backgroundColor: `hsl(${value})` }}
-                                />
-                              </PopoverTrigger>
-                              <PopoverContent>
-                                <Input
-                                  type="text"
-                                  value={value}
-                                  onChange={(e) => handleColorChange(name, e.target.value)}
-                                />
-                              </PopoverContent>
-                            </Popover>
-                            <Input
-                              value={value}
-                              onChange={(e) => handleColorChange(name, e.target.value)}
-                              className="flex-1"
-                            />
-                          </div>
-                        </div>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Font Customization */}
-                  <div className="border-t pt-6">
-                    <h4 className="font-medium mb-4 flex items-center">
-                      <Type className="w-4 h-4 mr-2" />
-                      Typography
-                    </h4>
-                    <Select onValueChange={handleFontChange} defaultValue={currentTheme.fonts.sans}>
-                      <SelectTrigger>
-                        <SelectValue placeholder="Select a font" />
-                      </SelectTrigger>
-                      <SelectContent>
-                        <SelectItem value="var(--font-inter)">Inter</SelectItem>
-                        <SelectItem value="var(--font-poppins)">Poppins</SelectItem>
-                        <SelectItem value="var(--font-roboto)">Roboto</SelectItem>
-                        <SelectItem value="var(--font-lato)">Lato</SelectItem>
-                        <SelectItem value="var(--font-merriweather)">Merriweather</SelectItem>
-                        <SelectItem value="var(--font-orbitron)">Orbitron</SelectItem>
-                      </SelectContent>
-                    </Select>
-                  </div>
-
-                  {/* Border Radius Customization */}
-                  <div className="border-t pt-6">
-                    <h4 className="font-medium mb-4 flex items-center">
-                      <CornerLeftUp className="w-4 h-4 mr-2" />
-                      Border Radius
-                    </h4>
-                    <Slider
-                      defaultValue={[parseFloat(currentTheme.borderRadius.md)]}
-                      max={2}
-                      step={0.1}
-                      onValueChange={handleBorderRadiusChange}
-                    />
-                  </div>
-
-                  {/* Theme History */}
-                  {themeHistory.length > 0 && (
-                    <div className="border-t pt-6">
-                      <h4 className="font-medium mb-4">History</h4>
-                      <div className="flex flex-wrap gap-2">
-                        {themeHistory.map((theme, index) => (
-                          <Button key={index} variant="outline" size="sm" onClick={() => setTheme(theme)}>
-                            {theme.name}
-                          </Button>
-                        ))}
-                      </div>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-              <Dialog open={isExportOpen} onOpenChange={setIsExportOpen}>
-                <DialogTrigger asChild>
-                  <Button className="w-full mt-6">
-                    <Download className="w-4 h-4 mr-2" />
-                    Export
-                  </Button>
-                </DialogTrigger>
-                <DialogContent className="max-w-2xl">
-                  <DialogHeader>
-                    <DialogTitle>Export {currentTheme.name} Theme</DialogTitle>
-                  </DialogHeader>
-                  <div className="space-y-4">
-                    <Tabs defaultValue="css">
-                      <TabsList className="grid w-full grid-cols-2">
-                        <TabsTrigger value="css">CSS</TabsTrigger>
-                        <TabsTrigger value="tailwind">tailwind.config.js</TabsTrigger>
-                      </TabsList>
-                      <TabsContent value="css">
-                        <p className="text-sm text-muted-foreground">
-                          Copy this CSS and paste it into your <code className="bg-muted px-1 rounded">globals.css</code> file to apply the theme.
-                        </p>
-                        <div className="relative mt-4">
-                          <pre className="bg-muted p-4 rounded-lg text-sm overflow-x-auto max-h-96">
-                            <code>{exportCSS()}</code>
-                          </pre>
-                          <Button
-                            size="sm"
-                            className="absolute top-2 right-2"
-                            onClick={handleExport}
-                          >
-                            {copied ? (
-                              <>
-                                <Check className="w-4 h-4 mr-2" />
-                                Copied!
-                              </>
-                            ) : (
-                              <>
-                                <Copy className="w-4 h-4 mr-2" />
-                                Copy
-                              </>
-                            )}
-                          </Button>
-                        </div>
-                      </TabsContent>
-                      <TabsContent value="tailwind">
-                        <p className="text-sm text-muted-foreground">
-                          Download the complete <code className="bg-muted px-1 rounded">tailwind.config.js</code> file.
-                        </p>
-                        <div className="relative mt-4">
-                          <pre className="bg-muted p-4 rounded-lg text-sm overflow-x-auto max-h-96">
-                            <code>{exportTailwind()}</code>
-                          </pre>
-                          <Button
-                            size="sm"
-                            className="absolute top-2 right-2"
-                            onClick={handleDownloadTailwind}
-                          >
-                            <Download className="w-4 h-4 mr-2" />
-                            Download
-                          </Button>
-                        </div>
-                      </TabsContent>
-                    </Tabs>
-                  </div>
-                </DialogContent>
-              </Dialog>
-            </div>
-            <div className="lg:col-span-2">
-              <Card>
-                <CardHeader>
-                  <CardTitle>Live Preview</CardTitle>
-                  <CardDescription>
-                    Your theme applied to common UI patterns
-                  </CardDescription>
-                </CardHeader>
-                <CardContent className="space-y-6">
-                  <div className="space-y-3">
-                    <h4 className="font-medium">Buttons</h4>
-                    <div className="flex flex-wrap gap-2">
-                      <Button>Primary</Button>
-                      <Button variant="secondary">Secondary</Button>
-                      <Button variant="outline">Outline</Button>
-                      <Button variant="ghost">Ghost</Button>
-                    </div>
-                  </div>
-
-                  <div className="space-y-3">
-                    <h4 className="font-medium">Cards</h4>
-                    <Card>
-                      <CardHeader className="pb-3">
-                        <CardTitle className="text-base">Sample Card</CardTitle>
-                        <CardDescription className="text-sm">
-                          This is how cards look with your theme
-                        </CardDescription>
-                      </CardHeader>
-                      <CardContent className="pt-0">
-                        <p className="text-sm text-muted-foreground">
-                          Card content goes here with proper contrast ratios.
-                        </p>
-                      </CardContent>
-                    </Card>
-                  </div>
-
-                  <div className="space-y-3">
-                    <h4 className="font-medium">Form Elements</h4>
-                    <Input placeholder="Sample input field" />
-                  </div>
-
-                  <div className="space-y-3">
-                    <h4 className="font-medium">Badges</h4>
-                    <div className="flex flex-wrap gap-2">
-                      <Badge>Default</Badge>
-                      <Badge variant="secondary">Secondary</Badge>
-                      <Badge variant="outline">Outline</Badge>
-                      <Badge variant="destructive">Destructive</Badge>
-                    </div>
-                  </div>
-
-                  <div className="pt-4 border-t">
-                    <Button variant="outline" className="w-full" asChild>
-                      <Link href="/preview/dashboard">
-                        <Eye className="w-4 h-4 mr-2" />
-                        View Full Preview Pages
-                      </Link>
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-            </div>
-          </div>
-        </section>
+        
       </main>
     </div>
   );
