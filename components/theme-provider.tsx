@@ -2,7 +2,7 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
 
-type Theme = {
+export type Theme = {
   id: string;
   name: string;
   description: string;
@@ -570,15 +570,25 @@ const predefinedThemes: Theme[] = [
       md: '0.2rem',
       lg: '0.3rem',
     },
-  }
+  },
 ];
 
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [currentTheme, setCurrentTheme] = useState<Theme>(defaultTheme);
+  // Initialize theme from localStorage or defaultTheme
+  const [currentTheme, setCurrentTheme] = useState<Theme>(() => {
+    if (typeof window !== 'undefined') {
+      const savedThemeId = localStorage.getItem('selectedTheme');
+      return savedThemeId
+        ? predefinedThemes.find((theme) => theme.id === savedThemeId) || defaultTheme
+        : defaultTheme;
+    }
+    return defaultTheme;
+  });
   const [isDark, setIsDark] = useState(false);
 
+  // Detect system dark mode preference
   useEffect(() => {
     const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
     setIsDark(mediaQuery.matches);
@@ -588,6 +598,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     return () => mediaQuery.removeEventListener('change', handler);
   }, []);
 
+  // Apply theme CSS variables
   useEffect(() => {
     const root = document.documentElement;
     const colors = isDark && currentTheme.darkColors ? currentTheme.darkColors : currentTheme.colors;
@@ -602,78 +613,179 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     });
 
     root.style.setProperty('--font-sans', currentTheme.fonts.sans);
-
-    const accentForeground = isDark && currentTheme.darkColors ? currentTheme.darkColors.accentForeground : currentTheme.colors.accentForeground;
-    root.style.setProperty('--accent-foreground', accentForeground);
-
+    if (currentTheme.fonts.serif) {
+      root.style.setProperty('--font-serif', currentTheme.fonts.serif);
+    }
+    if (currentTheme.fonts.mono) {
+      root.style.setProperty('--font-mono', currentTheme.fonts.mono);
+    }
   }, [currentTheme, isDark]);
 
+  // Persist theme selection to localStorage
   const setTheme = (theme: Theme) => {
     setCurrentTheme(theme);
+    if (typeof window !== 'undefined') {
+      localStorage.setItem('selectedTheme', theme.id);
+    }
   };
 
+  // Export global CSS with theme variables
   const exportCSS = () => {
     const lightColors = Object.entries(currentTheme.colors)
       .map(([key, value]) => {
         const cssVar = key.replace(/([A-Z])/g, '-$1').toLowerCase();
-        return `    --${cssVar}: ${value};`;
+        return `    --${cssVar}: ${value}`;
       })
       .join('\n');
 
     const darkColors = currentTheme.darkColors
       ? Object.entries(currentTheme.darkColors)
-        .map(([key, value]) => {
-          const cssVar = key.replace(/([A-Z])/g, '-$1').toLowerCase();
-          return `    --${cssVar}: ${value};`;
-        })
-        .join('\n')
+          .map(([key, value]) => {
+            const cssVar = key.replace(/([A-Z])/g, '-$1').toLowerCase();
+            return `    --${cssVar}: ${value}`;
+          })
+          .join('\n')
       : '';
 
     const borderRadius = Object.entries(currentTheme.borderRadius)
-      .map(([key, value]) => `    --radius-${key}: ${value};`)
+      .map(([key, value]) => `    --radius-${key}: ${value}`)
       .join('\n');
 
-    const fontSans = `    --font-sans: ${currentTheme.fonts.sans};
-`; const fontSerif = currentTheme.fonts.serif ? `    --font-serif: ${currentTheme.fonts.serif};
-` : ''; const fontMono = currentTheme.fonts.mono ? `    --font-mono: ${currentTheme.fonts.mono};
-` : ''; const fontSizeBase = currentTheme.fonts.baseSize ? `    --font-size-base: ${currentTheme.fonts.baseSize};
-` : ''; const lineHeight = currentTheme.fonts.lineHeight ? `    --line-height: ${currentTheme.fonts.lineHeight};
-` : ''; const letterSpacing = currentTheme.fonts.letterSpacing ? `    --letter-spacing: ${currentTheme.fonts.letterSpacing};
-` : ''; const fontWeightHeading = currentTheme.fonts.headingWeight ? `    --font-weight-heading: ${currentTheme.fonts.headingWeight};
-` : ''; const fontWeightBody = currentTheme.fonts.bodyWeight ? `    --font-weight-body: ${currentTheme.fonts.bodyWeight};
-` : '';
+    const fontStyles = [
+      `    --font-sans: ${currentTheme.fonts.sans}`,
+      currentTheme.fonts.serif ? `    --font-serif: ${currentTheme.fonts.serif}` : '',
+      currentTheme.fonts.mono ? `    --font-mono: ${currentTheme.fonts.mono}` : '',
+      currentTheme.fonts.baseSize ? `    --font-size-base: ${currentTheme.fonts.baseSize}` : '',
+      currentTheme.fonts.lineHeight ? `    --line-height: ${currentTheme.fonts.lineHeight}` : '',
+      currentTheme.fonts.letterSpacing ? `    --letter-spacing: ${currentTheme.fonts.letterSpacing}` : '',
+      currentTheme.fonts.headingWeight ? `    --font-weight-heading: ${currentTheme.fonts.headingWeight}` : '',
+      currentTheme.fonts.bodyWeight ? `    --font-weight-body: ${currentTheme.fonts.bodyWeight}` : '',
+    ]
+      .filter(Boolean)
+      .join('\n');
 
     return `@layer base {
   :root {
 ${lightColors}
 ${borderRadius}
-${fontSans}${fontSerif}${fontMono}${fontSizeBase}${lineHeight}${letterSpacing}${fontWeightHeading}${fontWeightBody}
+${fontStyles}
   }
   .dark {
 ${darkColors}
   }
-}`;;
+}`;
   };
 
+  // Export Tailwind config
   const exportTailwind = () => {
-    return `/** @type {import('tailwindcss').Config} */\nconst { fontFamily } = require("tailwindcss/defaultTheme");\n\nmodule.exports = {\n  darkMode: ["class"],\n  content: [\n    './pages/**/*.{ts,tsx}',\n    './components/**/*.{ts,tsx}',\n    './app/**/*.{ts,tsx}',\n    './src/**/*.{ts,tsx}',\n  ],\n  theme: {\n    container: {\n      center: true,\n      padding: "2rem",\n      screens: {\n        "2xl": "1400px",\n      },\n    },\n    extend: {\n      colors: {\n        border: "hsl(var(--border))",\n        input: "hsl(var(--input))",\n        ring: "hsl(var(--ring))",\n        background: "hsl(var(--background))",\n        foreground: "hsl(var(--foreground))",\n        primary: {\n          DEFAULT: "hsl(var(--primary))",\n          foreground: "hsl(var(--primary-foreground))",\n        },\n        secondary: {\n          DEFAULT: "hsl(var(--secondary))",\n          foreground: "hsl(var(--secondary-foreground))",\n        },\n        destructive: {\n          DEFAULT: "hsl(var(--destructive))",\n          foreground: "hsl(var(--destructive-foreground))",\n        },\n        muted: {\n          DEFAULT: "hsl(var(--muted))",\n          foreground: "hsl(var(--muted-foreground))",\n        },\n        accent: {\n          DEFAULT: "hsl(var(--accent))",\n          foreground: "hsl(var(--accent-foreground))",\n        },\n        popover: {\n          DEFAULT: "hsl(var(--popover))",\n          foreground: "hsl(var(--popover-foreground))",\n        },\n        card: {\n          DEFAULT: "hsl(var(--card))",\n          foreground: "hsl(var(--card-foreground))",\n        },\n      },\n      borderRadius: {\n        lg: "var(--radius-lg)",\n        md: "var(--radius-md)",\n        sm: "var(--radius-sm)",\n      },\n      fontFamily: {
-        ${fontFamilySans}
-        ${fontFamilySerif}
-        ${fontFamilyMono}
+    const fontFamilySans = currentTheme.fonts.sans
+      ? `sans: ["${currentTheme.fonts.sans.replace('var(--font-', '').replace(')', '')}", ...fontFamily.sans]`
+      : 'sans: [...fontFamily.sans]';
+    const fontFamilySerif = currentTheme.fonts.serif
+      ? `serif: ["${currentTheme.fonts.serif.replace('var(--font-', '').replace(')', '')}", ...fontFamily.serif]`
+      : '';
+    const fontFamilyMono = currentTheme.fonts.mono
+      ? `mono: ["${currentTheme.fonts.mono.replace('var(--font-', '').replace(')', '')}", ...fontFamily.mono]`
+      : '';
+    const fontSizeBase = currentTheme.fonts.baseSize ? `base: "${currentTheme.fonts.baseSize}"` : '';
+    const lineHeight = currentTheme.fonts.lineHeight ? `normal: "${currentTheme.fonts.lineHeight}"` : '';
+    const letterSpacing = currentTheme.fonts.letterSpacing ? `normal: "${currentTheme.fonts.letterSpacing}"` : '';
+    const fontWeightHeading = currentTheme.fonts.headingWeight ? `heading: "${currentTheme.fonts.headingWeight}"` : '';
+    const fontWeightBody = currentTheme.fonts.bodyWeight ? `body: "${currentTheme.fonts.bodyWeight}"` : '';
+
+    return `/** @type {import('tailwindcss').Config} */
+const { fontFamily } = require("tailwindcss/defaultTheme");
+
+module.exports = {
+  darkMode: ["class"],
+  content: [
+    "./src/**/*.{js,ts,jsx,tsx}",
+    "./app/**/*.{js,ts,jsx,tsx}",
+    "./pages/**/*.{js,ts,jsx,tsx}",
+    "./components/**/*.{js,ts,jsx,tsx}",
+  ],
+  theme: {
+    container: {
+      center: true,
+      padding: "2rem",
+      screens: {
+        "2xl": "1400px",
+      },
+    },
+    extend: {
+      colors: {
+        border: "hsl(var(--border))",
+        input: "hsl(var(--input))",
+        ring: "hsl(var(--ring))",
+        background: "hsl(var(--background))",
+        foreground: "hsl(var(--foreground))",
+        primary: {
+          DEFAULT: "hsl(var(--primary))",
+          foreground: "hsl(var(--primary-foreground))",
+        },
+        secondary: {
+          DEFAULT: "hsl(var(--secondary))",
+          foreground: "hsl(var(--secondary-foreground))",
+        },
+        destructive: {
+          DEFAULT: "hsl(var(--destructive))",
+          foreground: "hsl(var(--destructive-foreground))",
+        },
+        muted: {
+          DEFAULT: "hsl(var(--muted))",
+          foreground: "hsl(var(--muted-foreground))",
+        },
+        accent: {
+          DEFAULT: "hsl(var(--accent))",
+          foreground: "hsl(var(--accent-foreground))",
+        },
+        popover: {
+          DEFAULT: "hsl(var(--popover))",
+          foreground: "hsl(var(--popover-foreground))",
+        },
+        card: {
+          DEFAULT: "hsl(var(--card))",
+          foreground: "hsl(var(--card-foreground))",
+        },
+      },
+      borderRadius: {
+        lg: "var(--radius-lg)",
+        md: "var(--radius-md)",
+        sm: "var(--radius-sm)",
+      },
+      fontFamily: {
+        ${fontFamilySans}${fontFamilySerif ? `,\n        ${fontFamilySerif}` : ''}${fontFamilyMono ? `,\n        ${fontFamilyMono}` : ''}
       },
       fontSize: {
-        ${fontSizeBase}
+        ${fontSizeBase ? `${fontSizeBase},` : ''}
       },
       lineHeight: {
-        ${lineHeight}
+        ${lineHeight ? `${lineHeight},` : ''}
       },
       letterSpacing: {
-        ${letterSpacing}
+        ${letterSpacing ? `${letterSpacing},` : ''}
       },
       fontWeight: {
-        ${fontWeightHeading}
-        ${fontWeightBody}
-      },\n      keyframes: {\n        "accordion-down": {\n          from: { height: 0 },\n          to: { height: "var(--radix-accordion-content-height)" },\n        },\n        "accordion-up": {\n          from: { height: "var(--radix-accordion-content-height)" },\n          to: { height: 0 },\n        },\n      },\n      animation: {\n        "accordion-down": "accordion-down 0.2s ease-out",\n        "accordion-up": "accordion-up 0.2s ease-out",\n      },\n    },\n  },\n  plugins: [require("tailwindcss-animate")],\n}`;;
+        ${fontWeightHeading ? `${fontWeightHeading},` : ''}${fontWeightBody ? `\n        ${fontWeightBody},` : ''}
+      },
+      keyframes: {
+        "accordion-down": {
+          from: { height: "0" },
+          to: { height: "var(--radix-accordion-content-height)" },
+        },
+        "accordion-up": {
+          from: { height: "var(--radix-accordion-content-height)" },
+          to: { height: "0" },
+        },
+      },
+      animation: {
+        "accordion-down": "accordion-down 0.2s ease-out",
+        "accordion-up": "accordion-up 0.2s ease-out",
+      },
+    },
+  },
+  plugins: [require("tailwindcss-animate")],
+}`;
   };
 
   return (
