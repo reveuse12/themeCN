@@ -1,143 +1,68 @@
-'use client';
+import type { Theme } from '@/components/theme-provider';
 
-import React, { createContext, useContext, useState, useEffect } from 'react';
-
-type Theme = {
-  id: string;
-  name: string;
-  description: string;
-  colors: {
-    background: string;
-    foreground: string;
-    card: string;
-    cardForeground: string;
-    popover: string;
-    popoverForeground: string;
-    primary: string;
-    primaryForeground: string;
-    secondary: string;
-    secondaryForeground: string;
-    muted: string;
-    mutedForeground: string;
-    accent: string;
-    accentForeground: string;
-    destructive: string;
-    destructiveForeground: string;
-    border: string;
-    input: string;
-    ring: string;
-  };
-  darkColors?: {
-    background: string;
-    foreground: string;
-    card: string;
-    cardForeground: string;
-    popover: string;
-    popoverForeground: string;
-    primary: string;
-    primaryForeground: string;
-    secondary: string;
-    secondaryForeground: string;
-    muted: string;
-    mutedForeground: string;
-    accent: string;
-    accentForeground: string;
-    destructive: string;
-    destructiveForeground: string;
-    border: string;
-    input: string;
-    ring: string;
-  };
-  fonts: {
-    sans: string;
-    serif?: string;
-    mono?: string;
-    baseSize?: string;
-    lineHeight?: string;
-    letterSpacing?: string;
-    headingWeight?: string;
-    bodyWeight?: string;
-  };
-  borderRadius: {
-    sm: string;
-    md: string;
-    lg: string;
-  };
-};
-
-type ThemeContextType = {
-  currentTheme: Theme;
-  themes: Theme[];
-  setTheme: (theme: Theme) => void;
-  exportCSS: () => string;
-  exportTailwind: () => string;
-};
-
-const defaultTheme: Theme = {
-  id: 'default',
-  name: 'Default',
-  description: 'Clean and professional default theme',
-  colors: {
-    background: '0 0% 100%',
-    foreground: '0 0% 3.9%',
-    card: '0 0% 100%',
-    cardForeground: '0 0% 3.9%',
-    popover: '0 0% 100%',
-    popoverForeground: '0 0% 3.9%',
-    primary: '0 0% 9%',
-    primaryForeground: '0 0% 98%',
-    secondary: '0 0% 96.1%',
-    secondaryForeground: '0 0% 9%',
-    muted: '0 0% 96.1%',
-    mutedForeground: '0 0% 45.1%',
-    accent: '0 0% 96.1%',
-    accentForeground: '0 0% 9%',
-    destructive: '0 84.2% 60.2%',
-    destructiveForeground: '0 0% 98%',
-    border: '0 0% 89.8%',
-    input: '0 0% 89.8%',
-    ring: '0 0% 3.9%',
+export const predefinedThemes: Theme[] = [
+  {
+    id: 'default',
+    name: 'Default',
+    description: 'Clean and professional default theme',
+    colors: {
+      background: '0 0% 100%',
+      foreground: '0 0% 3.9%',
+      card: '0 0% 100%',
+      cardForeground: '0 0% 3.9%',
+      popover: '0 0% 100%',
+      popoverForeground: '0 0% 3.9%',
+      primary: '0 0% 9%',
+      primaryForeground: '0 0% 98%',
+      secondary: '0 0% 96.1%',
+      secondaryForeground: '0 0% 9%',
+      muted: '0 0% 96.1%',
+      mutedForeground: '0 0% 45.1%',
+      accent: '0 0% 96.1%',
+      accentForeground: '0 0% 9%',
+      destructive: '0 84.2% 60.2%',
+      destructiveForeground: '0 0% 98%',
+      border: '0 0% 89.8%',
+      input: '0 0% 89.8%',
+      ring: '0 0% 3.9%',
+    },
+    darkColors: {
+      background: '0 0% 3.9%',
+      foreground: '0 0% 98%',
+      card: '0 0% 3.9%',
+      cardForeground: '0 0% 98%',
+      popover: '0 0% 3.9%',
+      popoverForeground: '0 0% 98%',
+      primary: '0 0% 98%',
+      primaryForeground: '0 0% 9%',
+      secondary: '0 0% 14.9%',
+      secondaryForeground: '0 0% 98%',
+      muted: '0 0% 14.9%',
+      mutedForeground: '0 0% 63.9%',
+      accent: '0 0% 14.9%',
+      accentForeground: '0 0% 98%',
+      destructive: '0 62.8% 30.6%',
+      destructiveForeground: '0 0% 98%',
+      border: '0 0% 14.9%',
+      input: '0 0% 14.9%',
+      ring: '0 0% 83.1%',
+    },
+    fonts: {
+      sans: 'var(--font-inter)',
+      serif: 'var(--font-serif-default)',
+      mono: 'var(--font-mono-default)',
+      baseSize: '16px',
+      lineHeight: '1.5',
+      letterSpacing: '0em',
+      headingWeight: '700',
+      bodyWeight: '400',
+    },
+    borderRadius: {
+      sm: '0.25rem',
+      md: '0.5rem',
+      lg: '0.75rem',
+    },
   },
-  darkColors: {
-    background: '0 0% 3.9%',
-    foreground: '0 0% 98%',
-    card: '0 0% 3.9%',
-    cardForeground: '0 0% 98%',
-    popover: '0 0% 3.9%',
-    popoverForeground: '0 0% 98%',
-    primary: '0 0% 98%',
-    primaryForeground: '0 0% 9%',
-    secondary: '0 0% 14.9%',
-    secondaryForeground: '0 0% 98%',
-    muted: '0 0% 14.9%',
-    mutedForeground: '0 0% 63.9%',
-    accent: '0 0% 14.9%',
-    accentForeground: '0 0% 98%',
-    destructive: '0 62.8% 30.6%',
-    destructiveForeground: '0 0% 98%',
-    border: '0 0% 14.9%',
-    input: '0 0% 14.9%',
-    ring: '0 0% 83.1%',
-  },
-  fonts: {
-    sans: 'var(--font-inter)',
-    serif: 'var(--font-serif-default)',
-    mono: 'var(--font-mono-default)',
-    baseSize: '16px',
-    lineHeight: '1.5',
-    letterSpacing: '0em',
-    headingWeight: '700',
-    bodyWeight: '400',
-  },
-  borderRadius: {
-    sm: '0.25rem',
-    md: '0.5rem',
-    lg: '0.75rem',
-  },
-};
-
-const predefinedThemes: Theme[] = [
-  defaultTheme,
   {
     id: 'ocean',
     name: 'Ocean Breeze',
@@ -572,121 +497,3 @@ const predefinedThemes: Theme[] = [
     },
   }
 ];
-
-const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
-
-export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [currentTheme, setCurrentTheme] = useState<Theme>(defaultTheme);
-  const [isDark, setIsDark] = useState(false);
-
-  useEffect(() => {
-    const mediaQuery = window.matchMedia('(prefers-color-scheme: dark)');
-    setIsDark(mediaQuery.matches);
-
-    const handler = (e: MediaQueryListEvent) => setIsDark(e.matches);
-    mediaQuery.addEventListener('change', handler);
-    return () => mediaQuery.removeEventListener('change', handler);
-  }, []);
-
-  useEffect(() => {
-    const root = document.documentElement;
-    const colors = isDark && currentTheme.darkColors ? currentTheme.darkColors : currentTheme.colors;
-
-    Object.entries(colors).forEach(([key, value]) => {
-      const cssVar = key.replace(/([A-Z])/g, '-$1').toLowerCase();
-      root.style.setProperty(`--${cssVar}`, value);
-    });
-
-    Object.entries(currentTheme.borderRadius).forEach(([key, value]) => {
-      root.style.setProperty(`--radius-${key}`, value);
-    });
-
-    root.style.setProperty('--font-sans', currentTheme.fonts.sans);
-
-    const accentForeground = isDark && currentTheme.darkColors ? currentTheme.darkColors.accentForeground : currentTheme.colors.accentForeground;
-    root.style.setProperty('--accent-foreground', accentForeground);
-
-  }, [currentTheme, isDark]);
-
-  const setTheme = (theme: Theme) => {
-    setCurrentTheme(theme);
-  };
-
-  const exportCSS = () => {
-    const lightColors = Object.entries(currentTheme.colors)
-      .map(([key, value]) => {
-        const cssVar = key.replace(/([A-Z])/g, '-$1').toLowerCase();
-        return `    --${cssVar}: ${value};`;
-      })
-      .join('\n');
-
-    const darkColors = currentTheme.darkColors
-      ? Object.entries(currentTheme.darkColors)
-        .map(([key, value]) => {
-          const cssVar = key.replace(/([A-Z])/g, '-$1').toLowerCase();
-          return `    --${cssVar}: ${value};`;
-        })
-        .join('\n')
-      : '';
-
-    const borderRadius = Object.entries(currentTheme.borderRadius)
-      .map(([key, value]) => `    --radius-${key}: ${value};`)
-      .join('\n');
-
-    const fontSans = `    --font-sans: ${currentTheme.fonts.sans};
-`; const fontSerif = currentTheme.fonts.serif ? `    --font-serif: ${currentTheme.fonts.serif};
-` : ''; const fontMono = currentTheme.fonts.mono ? `    --font-mono: ${currentTheme.fonts.mono};
-` : ''; const fontSizeBase = currentTheme.fonts.baseSize ? `    --font-size-base: ${currentTheme.fonts.baseSize};
-` : ''; const lineHeight = currentTheme.fonts.lineHeight ? `    --line-height: ${currentTheme.fonts.lineHeight};
-` : ''; const letterSpacing = currentTheme.fonts.letterSpacing ? `    --letter-spacing: ${currentTheme.fonts.letterSpacing};
-` : ''; const fontWeightHeading = currentTheme.fonts.headingWeight ? `    --font-weight-heading: ${currentTheme.fonts.headingWeight};
-` : ''; const fontWeightBody = currentTheme.fonts.bodyWeight ? `    --font-weight-body: ${currentTheme.fonts.bodyWeight};
-` : '';
-
-    return `@layer base {
-  :root {
-${lightColors}
-${borderRadius}
-${fontSans}${fontSerif}${fontMono}${fontSizeBase}${lineHeight}${letterSpacing}${fontWeightHeading}${fontWeightBody}
-  }
-  .dark {
-${darkColors}
-  }
-}`;;
-  };
-
-  const exportTailwind = () => {
-    return `/** @type {import('tailwindcss').Config} */\nconst { fontFamily } = require("tailwindcss/defaultTheme");\n\nmodule.exports = {\n  darkMode: ["class"],\n  content: [\n    './pages/**/*.{ts,tsx}',\n    './components/**/*.{ts,tsx}',\n    './app/**/*.{ts,tsx}',\n    './src/**/*.{ts,tsx}',\n  ],\n  theme: {\n    container: {\n      center: true,\n      padding: "2rem",\n      screens: {\n        "2xl": "1400px",\n      },\n    },\n    extend: {\n      colors: {\n        border: "hsl(var(--border))",\n        input: "hsl(var(--input))",\n        ring: "hsl(var(--ring))",\n        background: "hsl(var(--background))",\n        foreground: "hsl(var(--foreground))",\n        primary: {\n          DEFAULT: "hsl(var(--primary))",\n          foreground: "hsl(var(--primary-foreground))",\n        },\n        secondary: {\n          DEFAULT: "hsl(var(--secondary))",\n          foreground: "hsl(var(--secondary-foreground))",\n        },\n        destructive: {\n          DEFAULT: "hsl(var(--destructive))",\n          foreground: "hsl(var(--destructive-foreground))",\n        },\n        muted: {\n          DEFAULT: "hsl(var(--muted))",\n          foreground: "hsl(var(--muted-foreground))",\n        },\n        accent: {\n          DEFAULT: "hsl(var(--accent))",\n          foreground: "hsl(var(--accent-foreground))",\n        },\n        popover: {\n          DEFAULT: "hsl(var(--popover))",\n          foreground: "hsl(var(--popover-foreground))",\n        },\n        card: {\n          DEFAULT: "hsl(var(--card))",\n          foreground: "hsl(var(--card-foreground))",\n        },\n      },\n      borderRadius: {\n        lg: "var(--radius-lg)",\n        md: "var(--radius-md)",\n        sm: "var(--radius-sm)",\n      },\n      fontFamily: {
-        ${fontFamilySans}
-        ${fontFamilySerif}
-        ${fontFamilyMono}
-      },
-      fontSize: {
-        ${fontSizeBase}
-      },
-      lineHeight: {
-        ${lineHeight}
-      },
-      letterSpacing: {
-        ${letterSpacing}
-      },
-      fontWeight: {
-        ${fontWeightHeading}
-        ${fontWeightBody}
-      },\n      keyframes: {\n        "accordion-down": {\n          from: { height: 0 },\n          to: { height: "var(--radix-accordion-content-height)" },\n        },\n        "accordion-up": {\n          from: { height: "var(--radix-accordion-content-height)" },\n          to: { height: 0 },\n        },\n      },\n      animation: {\n        "accordion-down": "accordion-down 0.2s ease-out",\n        "accordion-up": "accordion-up 0.2s ease-out",\n      },\n    },\n  },\n  plugins: [require("tailwindcss-animate")],\n}`;;
-  };
-
-  return (
-    <ThemeContext.Provider value={{ currentTheme, themes: predefinedThemes, setTheme, exportCSS, exportTailwind }}>
-      {children}
-    </ThemeContext.Provider>
-  );
-}
-
-export function useTheme() {
-  const context = useContext(ThemeContext);
-  if (context === undefined) {
-    throw new Error('useTheme must be used within a ThemeProvider');
-  }
-  return context;
-}

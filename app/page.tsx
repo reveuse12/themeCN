@@ -14,7 +14,7 @@ const features = [
   {
     icon: Code,
     title: 'Instant CSS Export',
-    description: 'Get production-ready CSS variables. Just copy, paste into your globals.css, and you\'re ready to go.',
+    description: "Get production-ready CSS variables. Just copy, paste into your globals.css, and you're ready to go.",
   },
   {
     icon: Zap,
@@ -54,7 +54,7 @@ const testimonials = [
   {
     name: 'Kenji Tanaka',
     role: 'UX/UI Designer',
-    content: 'This is the tool I\'ve been dreaming of. It bridges the gap between design vision and developer implementation flawlessly.',
+    content: "This is the tool I've been dreaming of. It bridges the gap between design vision and developer implementation flawlessly.",
     rating: 5,
   },
   {

@@ -15,14 +15,7 @@ import Link from "next/link";
 
 export function Header() {
   const navItems = [
-    {
-      name: "Features",
-      link: "#features",
-    },
-    {
-      name: "Pricing",
-      link: "#pricing",
-    },
+
     {
       name: "Contact",
       link: "/contact",
@@ -39,7 +32,7 @@ export function Header() {
           <NavbarLogo />
           <NavItems items={navItems} />
           <div className="flex items-center gap-2">
-            <NavbarButton variant="secondary" className="text-primary/50">Login</NavbarButton>
+            {/* <NavbarButton variant="secondary" className="text-primary/50">Login</NavbarButton> */}
             <NavbarButton href="/themes">Themes</NavbarButton>
           </div>
         </NavBody>
